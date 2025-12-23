@@ -2,25 +2,19 @@ import js from '@eslint/js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import markdown from '@eslint/markdown'
+import { defineConfig } from 'eslint/config'
 
 import prettierPlugin from 'eslint-plugin-prettier'
 import prettierConfig from 'eslint-config-prettier'
 
-export default tseslint.config(
+export default defineConfig([
   {
-    ignores: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/.turbo/**',
-      '**/.cache/**',
-      '**/coverage/**',
-      '**/*.d.ts'
-    ]
+    ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**', '**/*.d.ts']
   },
 
   {
     files: ['**/*.{js,mjs,cjs}'],
-    extends: [js.configs.recommended],
+    ...js.configs.recommended,
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -49,12 +43,12 @@ export default tseslint.config(
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
 
-      '@typescript-eslint/ban-ts-comment': 'warn',
-      '@typescript-eslint/no-explicit-any': 'off',
+      'no-extra-semi': 'error',
 
       'no-undef': 'off',
 
-      'no-extra-semi': 'error'
+      '@typescript-eslint/ban-ts-comment': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off'
     }
   },
 
@@ -62,14 +56,15 @@ export default tseslint.config(
     files: ['**/*.md'],
     plugins: { markdown },
     language: 'markdown/gfm',
-    extends: ['markdown/recommended']
+    extends: [markdown.configs.recommended]
   },
 
   prettierConfig,
+
   {
     plugins: { prettier: prettierPlugin },
     rules: {
       'prettier/prettier': 'warn'
     }
   }
-)
+])
