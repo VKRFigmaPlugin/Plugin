@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: marketplace-cards-backend
+    ports:
+      - '3000:3001'
+    env_file:
+      - ./apps/backend/.env
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: '1'
+      CHOKIDAR_INTERVAL: '250'
+    volumes:
+      - ./:/app:cached
+      - backend_node_modules:/app/node_modules
+    restart: unless-stopped
+
+volumes:
+  backend_node_modules:
